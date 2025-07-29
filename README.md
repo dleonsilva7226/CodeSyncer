@@ -6,8 +6,6 @@ Welcome to **CodeSyncer**, an AI-enhanced full-stack synchronization and collabo
 
 ## 🧭 Quest Overview
 
-## 🧭 Quest Overview
-
 | Level | Name                   | Objective                                 | Due Date        | Status |
 |-------|------------------------|-------------------------------------------|------------------|--------|
 | 1     | 🌱 The Sync Begins      | Core backend, frontend, and DB setup      | **Aug 4, 2025**  | [ ]    |
