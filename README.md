@@ -8,13 +8,13 @@ Welcome to **CodeSyncer**, an AI-enhanced full-stack synchronization and collabo
 
 | Level | Name                  | Objective                                 | Status |
 |-------|-----------------------|-------------------------------------------|--------|
-| 1     | 🌱 The Sync Begins     | Core backend, frontend, and DB setup      | ☐      |
-| 2     | ⚡ Dependency Decoder  | Integrate AI suggestions MVP              | ☐      |
-| 3     | 🧠 Merge Master        | AI-powered diff & merge resolution        | ☐      |
-| 4     | 📡 Real-Time Ranger    | Add live collaboration via WebSockets     | ☐      |
-| 5     | 🏗️ Architect Mode       | Build advanced UI + dependency tools      | ☐      |
-| 6     | 🧪 The Tester          | Add tests + analytics for optimization    | ☐      |
-| 7     | 🧬 AI Apprentice (Bonus)| Train your own AI model for suggestions   | ☐      |
+| 1     | 🌱 The Sync Begins     | Core backend, frontend, and DB setup      | [ ]      |
+| 2     | ⚡ Dependency Decoder  | Integrate AI suggestions MVP              | [ ]      |
+| 3     | 🧠 Merge Master        | AI-powered diff & merge resolution        | [ ]     |
+| 4     | 📡 Real-Time Ranger    | Add live collaboration via WebSockets     | [ ]      |
+| 5     | 🏗️ Architect Mode       | Build advanced UI + dependency tools      | [ ]      |
+| 6     | 🧪 The Tester          | Add tests + analytics for optimization    | [ ]     |
+| 7     | 🧬 AI Apprentice (Bonus)| Train your own AI model for suggestions   | [ ]      |
 
 ---
 
