@@ -6,15 +6,18 @@ Welcome to **CodeSyncer**, an AI-enhanced full-stack synchronization and collabo
 
 ## 🧭 Quest Overview
 
-| Level | Name                  | Objective                                 | Status |
-|-------|-----------------------|-------------------------------------------|--------|
-| 1     | 🌱 The Sync Begins     | Core backend, frontend, and DB setup      | [ ]      |
-| 2     | ⚡ Dependency Decoder  | Integrate AI suggestions MVP              | [ ]      |
-| 3     | 🧠 Merge Master        | AI-powered diff & merge resolution        | [ ]     |
-| 4     | 📡 Real-Time Ranger    | Add live collaboration via WebSockets     | [ ]      |
-| 5     | 🏗️ Architect Mode       | Build advanced UI + dependency tools      | [ ]      |
-| 6     | 🧪 The Tester          | Add tests + analytics for optimization    | [ ]     |
-| 7     | 🧬 AI Apprentice (Bonus)| Train your own AI model for suggestions   | [ ]      |
+## 🧭 Quest Overview
+
+| Level | Name                   | Objective                                 | Due Date        | Status |
+|-------|------------------------|-------------------------------------------|------------------|--------|
+| 1     | 🌱 The Sync Begins      | Core backend, frontend, and DB setup      | **Aug 4, 2025**  | [ ]    |
+| 2     | ⚡ Dependency Decoder   | Integrate AI suggestions MVP              | **Aug 9, 2025**  | [ ]    |
+| 3     | 🧠 Merge Master         | AI-powered diff & merge resolution        | **Aug 16, 2025** | [ ]    |
+| 4     | 📡 Real-Time Ranger     | Add live collaboration via WebSockets     | **Aug 28, 2025** | [ ]    |
+| 5     | 🏗️ Architect Mode        | Build advanced UI + dependency tools      | **Sep 6, 2025**  | [ ]    |
+| 6     | 🧪 The Tester           | Add tests + analytics for optimization    | **Sep 13, 2025** | [ ]    |
+| 7     | 🧬 AI Apprentice (Bonus)| Train your own AI model for suggestions   | **Sep 22, 2025** | [ ]    |
+
 
 ---
 
