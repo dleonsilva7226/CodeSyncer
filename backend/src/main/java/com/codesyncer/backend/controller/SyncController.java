@@ -4,7 +4,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import java.util.*;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api")
 public class SyncController {
@@ -22,7 +25,8 @@ public class SyncController {
         System.out.println(syncRequest.getContent());
         System.out.println(syncRequest.getAuthor());
         System.out.println(syncRequest.getTimeStamp());
-        return new ResponseEntity<>("Diff received", HttpStatus.OK);
+        Map<String, String> syncResponse = Map.of("Message", "Diff received");
+        return new ResponseEntity<>(syncResponse, HttpStatus.OK);
     }
 
 }

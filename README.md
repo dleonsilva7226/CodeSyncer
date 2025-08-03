@@ -23,11 +23,11 @@ Welcome to **CodeSyncer**, an AI-enhanced full-stack synchronization and collabo
 
 🧩 _Goal:_ Set up the foundation for the app.
 
-- [ ] Create a Spring Boot backend project with REST API
-- [ ] Create a Next.js frontend with TypeScript
+- [X] Create a Spring Boot backend project with REST API
+- [X] Create a Next.js frontend with TypeScript
 - [ ] Connect PostgreSQL and define base schema (e.g., projects, diffs)
-- [ ] Create a `/sync` route where frontend sends dummy diff to backend
-- [ ] Log received data to confirm end-to-end integration
+- [X] Create a `/sync` route where frontend sends dummy diff to backend
+- [X] Log received data to confirm end-to-end integration
 
 ✅ **Reward:** Project skeleton working and connected!
 
