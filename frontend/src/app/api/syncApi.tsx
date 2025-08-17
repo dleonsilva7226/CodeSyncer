@@ -1,19 +1,11 @@
 export const syncApi = () => {
     const ENDPOINT_PREFIX = 'http://localhost:8080';
 
-    const fetchSyncApi = async (old_data: {
-        content: string;
-        author: string;
-        timeStamp: string;
-    }) => {
+    const fetchSyncApi = async (formData: FormData) => {
         try {
-            const response = await fetch(`${ENDPOINT_PREFIX}/api/sync`, {
+            const response = await fetch(`${ENDPOINT_PREFIX}/api/suggest`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-
-                },
-                body: JSON.stringify(old_data),
+                body: formData
             });
             console.log('Response status:', response.status);
             console.log('Response headers:', response.headers);

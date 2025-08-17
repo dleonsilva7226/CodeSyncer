@@ -8,9 +8,9 @@ Welcome to **CodeSyncer**, an AI-enhanced full-stack synchronization and collabo
 
 | Level | Name                   | Objective                                 | Due Date        | Status |
 |-------|------------------------|-------------------------------------------|------------------|--------|
-| 1     | 🌱 The Sync Begins      | Core backend, frontend, and DB setup      | **Aug 4, 2025**  | [ ]    |
-| 2     | ⚡ Dependency Decoder   | Integrate AI suggestions MVP              | **Aug 9, 2025**  | [ ]    |
-| 3     | 🧠 Merge Master         | AI-powered diff & merge resolution        | **Aug 16, 2025** | [ ]    |
+| 1     | 🌱 The Sync Begins      | Core backend, frontend, and DB setup      | **Aug 4, 2025**  | [X]    |
+| 2     | ⚡ Dependency Decoder   | Integrate AI suggestions MVP              | **Aug 9, 2025**  | [X]    |
+| 3     | 🧠 Merge Master         | AI-powered diff & merge resolution        | **Aug 18, 2025** | [ ]    |
 | 4     | 📡 Real-Time Ranger     | Add live collaboration via WebSockets     | **Aug 28, 2025** | [ ]    |
 | 5     | 🏗️ Architect Mode        | Build advanced UI + dependency tools      | **Sep 6, 2025**  | [ ]    |
 | 6     | 🧪 The Tester           | Add tests + analytics for optimization    | **Sep 13, 2025** | [ ]    |
@@ -25,7 +25,7 @@ Welcome to **CodeSyncer**, an AI-enhanced full-stack synchronization and collabo
 
 - [X] Create a Spring Boot backend project with REST API
 - [X] Create a Next.js frontend with TypeScript
-- [ ] Connect PostgreSQL and define base schema (e.g., projects, diffs)
+- [X] Connect PostgreSQL and define base schema (e.g., projects, diffs)
 - [X] Create a `/sync` route where frontend sends dummy diff to backend
 - [X] Log received data to confirm end-to-end integration
 
@@ -37,10 +37,10 @@ Welcome to **CodeSyncer**, an AI-enhanced full-stack synchronization and collabo
 
 🧩 _Goal:_ Add AI insight system for suggestions.
 
-- [ ] Integrate OpenAI or similar SDK
-- [ ] Build prompt logic to analyze frontend/backend diffs
-- [ ] Return simple suggestions from AI (e.g. refactor hints)
-- [ ] Display suggestions in frontend below the submitted diff
+- [X] Integrate OpenAI or similar SDK
+- [X] Build prompt logic to analyze frontend/backend diffs
+- [X] Return simple suggestions from AI (e.g. refactor hints)
+- [X] Display suggestions in frontend below the submitted diff
 
 ✅ **Reward:** Working suggestion engine!
 
@@ -50,7 +50,9 @@ Welcome to **CodeSyncer**, an AI-enhanced full-stack synchronization and collabo
 
 🧩 _Goal:_ Intelligent conflict resolution engine.
 
-- [ ] Compare two code versions and compute diff
+- [X] Refactor Code so that it accepts both frontend and backend files
+- [RN] Compare two code versions and compute diff
+- [ ] Refactor Code so that there's a sync and diff controller logic separate
 - [ ] Let AI suggest a merged version of both
 - [ ] Display merge suggestion in UI with accept/reject buttons
 - [ ] Store accepted merge to DB
