@@ -1,6 +1,5 @@
 package com.codesyncer.backend.service;
 
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,13 +8,10 @@ import com.codesyncer.backend.exceptions.ContentLimitExceededException;
 import com.codesyncer.backend.exceptions.FileTooLargeException;
 import com.codesyncer.backend.exceptions.NonTextFileException;
 import com.codesyncer.backend.model.Diff;
-import com.codesyncer.backend.model.Sync;
 import com.codesyncer.backend.repository.DiffRepo;
-import com.codesyncer.backend.repository.SyncRepo;
 import com.github.difflib.DiffUtils;
 import com.github.difflib.patch.AbstractDelta;
 import com.github.difflib.patch.Patch;
-import io.micrometer.core.instrument.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,8 +20,6 @@ import java.util.List;
 
 @Service
 public class DiffService {
-
-    private final SyncRepo syncRepo;
     private final DiffRepo diffRepo;
     private final AiService aiService;
     private final long MAX_FILE_SIZE = 1048576;
@@ -34,41 +28,11 @@ public class DiffService {
     public static final String UTF8_BOM = "\uFEFF";
 
     @Autowired
-    public DiffService(SyncRepo syncRepo, DiffRepo diffRepo, AiService aiService) {
-        this.syncRepo = syncRepo;
+    public DiffService(DiffRepo diffRepo, AiService aiService) {
         this.diffRepo = diffRepo;
         this.aiService = aiService;
     }
 
-    public String createCodeRecommendation(MultipartFile backendCode, MultipartFile frontendCode, String author) {
-        String convertedBackendCode = convertMultipartFiletoString(backendCode);
-        String convertedFrontendCode = convertMultipartFiletoString(frontendCode);
-
-        String prompt = """
-        You are an AI assistant analyzing code differences between a frontend and backend.
-        Your task is to provide specific, actionable refactoring recommendations to improve synchronization.
-        
-        Follow these rules for your response:
-        1. Only output a numbered list of suggestions — one per line.
-        2. Do not add explanations or extra text outside the list.
-        3. Keep each suggestion short and actionable.
-        
-        Here is the code to analyze:
-        ----FRONTEND CODE HERE----
-        %s
-        
-        ----BACKEND CODE HERE----
-        %s
-        
-        
-        """.formatted(convertedFrontendCode, convertedBackendCode);
-
-        String codeRecResponse = aiService.chat(prompt);
-        Sync newSync = new Sync(convertedBackendCode, convertedFrontendCode, author);
-        newSync.setCodeRecommendation(codeRecResponse);
-        syncRepo.save(newSync);
-        return newSync.getCodeRecommendation();
-    }
 
     public List<Diff> provideLineDiffs(
         MultipartFile oldFile,
@@ -97,10 +61,10 @@ public class DiffService {
             for (int i = 0; i < totalDeltaSize; i++) {
                 AbstractDelta<String> delta = compareLineDiffs.getDeltas().get(i);
                 String type = delta.getType().toString().toLowerCase();
-                int oldStartLine = delta.getSource().getPosition() + 1;
+                int oldStartLine = delta.getSource().getPosition();
                 int oldEndLine = oldStartLine + delta.getSource().getLines().size();
                 List<String> oldLines = delta.getSource().getLines();
-                int newStartLine = delta.getTarget().getPosition() + 1;
+                int newStartLine = delta.getTarget().getPosition();
                 int newEndLine = newStartLine + delta.getTarget().getLines().size();
                 List<String> newLines = delta.getTarget().getLines();
                 // Calculate context lines
@@ -108,17 +72,20 @@ public class DiffService {
                 int oldContextAfterEnd = Math.min(oldDisplayLines.length - 1, oldEndLine + contextLines);
                 int newContextBeforeStart = Math.max(0, newStartLine - contextLines);
                 int newContextAfterEnd = Math.min(newDisplayLines.length - 1, newEndLine + contextLines);
-                List <String> oldContextBeforeStartLines = new ArrayList<String>(Arrays.asList(oldDisplayLines).subList(oldContextBeforeStart, oldStartLine));
-                List <String> oldContextAfterEndLines = new ArrayList<String>(Arrays.asList(oldDisplayLines).subList(oldEndLine + 1, oldContextAfterEnd));
-                List <String> newContextBeforeStartLines = new ArrayList<String>(Arrays.asList(newDisplayLines).subList(newContextBeforeStart, newStartLine));
-                List <String> newContextAfterEndLines = new ArrayList<String>(Arrays.asList(newDisplayLines).subList(newEndLine + 1, newContextAfterEnd));
+                System.out.println("New Display Lines: " + Arrays.toString(newDisplayLines));
+                System.out.println("Old Display Lines: " + Arrays.toString(oldDisplayLines));
+                List<String> oldContextBeforeStartLines = safeSubList(Arrays.asList(oldDisplayLines), Math.max(0, oldStartLine - contextLines), oldStartLine);
+                List<String> oldContextAfterEndLines = safeSubList(Arrays.asList(oldDisplayLines), oldEndLine + 1, Math.min(oldDisplayLines.length, oldEndLine + contextLines + 1));
+                List<String> newContextBeforeStartLines = safeSubList(Arrays.asList(newDisplayLines), Math.max(0, newStartLine - contextLines), newStartLine);
+                List<String> newContextAfterEndLines = safeSubList(Arrays.asList(newDisplayLines), newEndLine + 1, Math.min(newDisplayLines.length, newEndLine + contextLines + 1));
+
                 allDiffHunks.add(new Diff(
                     type,
-                    oldStartLine,
-                    oldEndLine,
+                    oldStartLine + 1,
+                    oldEndLine + 1,
                     oldLines,
-                    newStartLine,
-                    newEndLine,
+                    newStartLine + 1,
+                    newEndLine + 1,
                     newLines,
                     oldContextBeforeStartLines,
                     oldContextAfterEndLines,
@@ -138,6 +105,14 @@ public class DiffService {
             return new ArrayList<Diff>();
         }
     }
+
+    private List<String> safeSubList(List<String> list, int from, int to) {
+        if (from >= 0 && to <= list.size() && from < to) {
+            return new ArrayList<>(list.subList(from, to));
+        }
+        return new ArrayList<>();
+    }
+
 
 
     public String applyFlags(String text, boolean ignoreWhitespace, boolean ignoreCase) {
@@ -182,18 +157,6 @@ public class DiffService {
 
         return text;
 
-    }
-
-
-
-    public String convertMultipartFiletoString (MultipartFile file) {
-        if (file == null || file.isEmpty()) { return ""; }
-
-        try (InputStream inputStream = file.getInputStream()) {
-            return IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-        } catch (Exception e) {
-            return "Error occurred: " + e;
-        }
     }
 
 }

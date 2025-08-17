@@ -51,8 +51,8 @@ Welcome to **CodeSyncer**, an AI-enhanced full-stack synchronization and collabo
 🧩 _Goal:_ Intelligent conflict resolution engine.
 
 - [X] Refactor Code so that it accepts both frontend and backend files
-- [RN] Compare two code versions and compute diff
-- [ ] Refactor Code so that there's a sync and diff controller logic separate
+- [X] Compare two code versions and compute diff
+- [X] Refactor Code so that there's a sync and diff controller logic separate
 - [ ] Let AI suggest a merged version of both
 - [ ] Display merge suggestion in UI with accept/reject buttons
 - [ ] Store accepted merge to DB

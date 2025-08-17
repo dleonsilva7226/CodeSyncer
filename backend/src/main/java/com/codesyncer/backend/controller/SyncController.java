@@ -1,6 +1,8 @@
 package com.codesyncer.backend.controller;
+import com.codesyncer.backend.service.AiService;
 import com.codesyncer.backend.service.DiffService;
 import com.codesyncer.backend.model.Diff;
+import com.codesyncer.backend.service.SyncService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,14 +14,16 @@ import java.util.*;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/sync")
 public class SyncController {
 
-    private DiffService diffService;
+    private SyncService syncService;
+    private AiService aiService;
 
     @Autowired
-    public SyncController (DiffService diffService) {
-        this.diffService = diffService;
+    public SyncController (SyncService syncService, AiService aiService) {
+        this.syncService = syncService;
+        this.aiService = aiService;
     }
 
     @GetMapping("/ping")
@@ -39,22 +43,8 @@ public class SyncController {
             return new ResponseEntity<String[]>(missingFileMessage, HttpStatus.BAD_REQUEST);
         }
 
-        String codeRecommendation = this.diffService.createCodeRecommendation(backendCode, frontendCode, author);
+        String codeRecommendation = this.syncService.createCodeRecommendation(backendCode, frontendCode, author);
         String[] suggestions = codeRecommendation.split("\\r?\\n");
         return new ResponseEntity<String[]>(suggestions, HttpStatus.OK);
-    }
-
-    @PostMapping("/diff")
-    public ResponseEntity<List<Diff>> provideDiff (
-        @RequestParam("oldFile") MultipartFile oldFile,
-        @RequestParam("newFile") MultipartFile newFile,
-        @RequestParam(value = "ignoreWhitespace", defaultValue = "false") boolean ignoreWhitespace,
-        @RequestParam(value = "ignoreCase", defaultValue = "false") boolean ignoreCase,
-        @RequestParam(value = "contextLines", defaultValue = "0") int contextLines,
-        @RequestParam("saveToDB") boolean saveToDB
-    ) {
-        if (oldFile.isEmpty() || newFile.isEmpty()) { return ResponseEntity.badRequest().body(Collections.emptyList()); }
-        List<Diff> diffs = diffService.provideLineDiffs(oldFile, newFile, ignoreWhitespace, ignoreCase, contextLines, saveToDB);
-        return new ResponseEntity<List<Diff>>(diffs, HttpStatus.OK);
     }
 }
