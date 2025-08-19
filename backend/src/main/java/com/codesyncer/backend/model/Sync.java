@@ -79,6 +79,14 @@ public class Sync {
 
     @Override
     public String toString() {
-        return "Diff [id=" + id + ", backendCode " + backendCode +  ", frontendCode " + frontendCode + ", author=" + author + ", timestamp=" + timestamp.toString() + "]";
+//        return "Sync [id=" + id + ", backendCode " + backendCode +  ", frontendCode " + frontendCode + ", author=" + author + ", timestamp=" + timestamp.toString() + "]";
+        return "Sync{" +
+                "id=" + id +
+                ", backendCode='" + backendCode + '\'' +
+                ", frontendCode='" + frontendCode + '\'' +
+                ", author='" + author + '\'' +
+                ", timestamp=" + timestamp.toString() + '\'' +
+                ", codeRecommendation='" + codeRecommendation + '\'' +
+                '}';
     }
 }

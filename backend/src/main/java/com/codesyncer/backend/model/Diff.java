@@ -172,6 +172,13 @@ public class Diff {
 
     @Override
     public String toString() {
-        return "Diff [id=" + id + ", type=" + type +  ", oldStartLine=" + oldStartLine + ", oldEndLine=" + oldEndLine + ", oldLines=" + oldLines.toString() + ", newStartLine=" + newStartLine +  ", newEndLine=" + newEndLine + ", newLines=" + newLines.toString() + "]";
+        return "Diff [id=" + id +
+                ", type=" + type +
+                ", oldStartLine=" + oldStartLine +
+                ", oldEndLine=" + oldEndLine +
+                ", oldLines=" + oldLines.toString() +
+                ", newStartLine=" + newStartLine +
+                ", newEndLine=" + newEndLine +
+                ", newLines=" + newLines.toString() + "]";
     }
 }
