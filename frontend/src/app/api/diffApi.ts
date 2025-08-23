@@ -1,9 +1,10 @@
-export const syncApi = () => {
-    const ENDPOINT_PREFIX = 'http://localhost:8080';
+import { ENDPOINT_PREFIX } from ".";
 
-    const fetchSyncApi = async (formData: FormData) => {
+export const diffApi = () => {
+    
+    const fetchDiffApi = async (formData: FormData) => {
         try {
-            const response = await fetch(`${ENDPOINT_PREFIX}/api/suggest`, {
+            const response = await fetch(`${ENDPOINT_PREFIX}/diff/hunks`, {
                 method: 'POST',
                 body: formData
             });
@@ -14,16 +15,16 @@ export const syncApi = () => {
                 return "Not cool";
             }
             const data = await response.json();
-            console.log('Data fetched from sync API:', data);
+            console.log('Data fetched from diff API:', data);
             return data;
         } catch (error) {
-            console.error('Error fetching sync API:', error);
+            console.error('Error fetching diff API:', error);
             throw error;
         }
     }
 
     return {
-        fetchSyncApi
+        fetchDiffApi
     }
     
 }

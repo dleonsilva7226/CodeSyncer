@@ -1,4 +1,5 @@
 import { syncApi } from "./api/syncApi";
+import 'react-diff-view/style/index.css';
 import Link from 'next/link'
 
 export default function Home() {
@@ -9,13 +10,15 @@ export default function Home() {
         <p className="text-lg text-gray-600 mb-8 text-center">
           Effortlessly sync and compare your frontend and backend code. Get started by submitting your code!
         </p>
+        
         <Link
-          href="/form"
+          href="/synchronizer"
           className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200"
         >
-          Go to Form Page
+          Go to where the synchronizer is!
         </Link>
       </div>
+
     </div>
   );
 }
