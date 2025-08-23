@@ -32,36 +32,72 @@ public class MergeService {
         String convertedNewFile = convertMultipartFiletoString(newFile);
         List<Diff> diffInfo = diffService.provideLineDiffs(oldFile, newFile, false, false, 0, saveToDB);
 
-        String prompt = """
-        You are an intelligent code assistant. You are given two versions of code: an "old" version and a "new" version. Your job is to suggest a merged version that:
- 
-        - Preserves any valuable logic or structure from the old version
-        - Integrates the intended changes in the new version
-        - Ensures the final output is syntactically valid and logically sound
-        - Keeps consistent formatting and code style
-        - Does not duplicate or omit important functionality
-
+        String codePrompt = """
+        You are given OLD and NEW versions of source code and their DIFF.
+        Return ONLY the merged code that:
+        - Preserves the structure and logic of the OLD version
+        - Integrates the intended changes in the NEW version
+        - Matches the DIFF
+        - Is valid and runnable in the same language as the input
+               
+        CRITICAL RULES:
+        - Return ONLY the code (no explanation or description)
+        - You may wrap it in a single fenced code block (```lang ... ```)
+               
         OLD CODE:
         %s
+               
+        NEW CODE:
+        %s
+               
+        DIFF INFO:
+        %s
+        """.formatted(convertedOldFile, convertedNewFile, diffInfo.toString());
 
+        String mergedCode = sanitizeCode(extractFirstCodeBlockOrAll(aiService.chat(codePrompt)));
+
+        String explanationPrompt = """
+        Explain WHY the merged code was created this way, referencing the DIFF.
+        Focus on what was preserved from OLD, what was changed from NEW,
+        and why the final code makes sense.
+        
+        Keep it concise (3–6 sentences).
+        Plain text only, no code blocks.
+        
+        OLD CODE:
+        %s
+        
         NEW CODE:
         %s
         
-        Also here is the diff info reported for these two code files:
+        DIFF INFO:
         %s
+        
+        MERGED CODE:
+        %s
+        """.formatted(convertedOldFile, convertedNewFile, diffInfo.toString(), mergedCode);
 
-        Please return the merged code snippet, with an explanation and a description.
-        Format it so that the code snippet, explanation and the description are all separated by a ,,, symbol (in this order mentioned)
-        """.formatted(convertedOldFile, convertedNewFile, diffInfo.toString());
+        String mergeExplanation = sanitizeText(aiService.chat(explanationPrompt));
 
-        String mergeResponse = aiService.chat(prompt);
-        String[] mergeResArr = mergeResponse.split(",,,");
-        Merge newMerge;
-        if (mergeResArr.length < 3) {
-            newMerge = new Merge(author, "", convertedOldFile, convertedNewFile, mergeResponse, "", diffInfo);
-        } else {
-            newMerge = new Merge(author, mergeResArr[2], convertedOldFile, convertedNewFile, mergeResArr[0], mergeResArr[1], diffInfo);
-        }
+        String descriptionPrompt = """
+        Summarize what the merged code does in 1–2 sentences.
+        Plain text only, no code blocks.
+        
+        MERGED CODE:
+        %s
+        """.formatted(mergedCode);
+
+        String mergeDescription = sanitizeText(aiService.chat(descriptionPrompt));
+
+        Merge newMerge = new Merge(
+            author,
+            mergeDescription,
+            convertedOldFile,
+            convertedNewFile,
+            mergedCode,
+            mergeExplanation,
+            diffInfo
+        );
 
         mergeRepo.save(newMerge);
         return newMerge;
@@ -87,6 +123,44 @@ public class MergeService {
             return Map.of("message", "Merge suggestion deleted successfully");
         }
 
+    }
+
+    /** Prefer the first fenced/HTML code block; else return the whole string. */
+    private String extractFirstCodeBlockOrAll(String raw) {
+        if (raw == null) return "";
+        // ```lang\n ... \n```
+        var md = java.util.regex.Pattern.compile("```[a-zA-Z0-9_-]*\\s*([\\s\\S]*?)```",
+                java.util.regex.Pattern.DOTALL);
+        var m = md.matcher(raw);
+        if (m.find()) return m.group(1);
+
+        // <code> ... </code>
+        var html = java.util.regex.Pattern.compile("(?is)<code[^>]*>([\\s\\S]*?)</code>");
+        var h = html.matcher(raw);
+        if (h.find()) return h.group(1);
+
+        return raw; // no explicit block, use entire output
+    }
+
+    /** Final cleanup for code area. */
+    private String sanitizeCode(String code) {
+        if (code == null) return "";
+        return code
+                .replaceAll("```[a-zA-Z0-9_-]*", "") // strip opening ```lang
+                .replace("```", "")                  // strip closing ```
+                .replaceAll("(?is)</?code>", "")     // strip <code> tags
+                .replace("\r\n", "\n")               // normalize EOLs
+                .trim();
+    }
+
+    /** For explanation/description: trim; drop accidental leading labels or fenced blocks. */
+    private String sanitizeText(String s) {
+        if (s == null) return "";
+        // remove any full fenced blocks the model might have added
+        s = s.replaceAll("```[\\s\\S]*?```", "");
+        // strip leading labels like "Explanation:" or "Description:"
+        s = s.replaceFirst("(?is)^\\s*(explanation|description)\\s*:\\s*", "");
+        return s.trim();
     }
 
 

@@ -55,7 +55,7 @@ Welcome to **CodeSyncer**, an AI-enhanced full-stack synchronization and collabo
 - [X] Refactor Code so that there's a sync and diff controller logic separate
 - [X] Let AI suggest a merged version of both
 - [X] Create accept/reject backend logic
-- [ ] Display merge suggestion in UI with accept/reject buttons
+- [ ] Display merge suggestion in UI with accept/reject buttons and show success message
 - [] Store accepted merge to DB
 
 ✅ **Reward:** Become the master of merging!
@@ -113,6 +113,14 @@ Welcome to **CodeSyncer**, an AI-enhanced full-stack synchronization and collabo
 ✅ **Reward:** You built your own MergeGPT 😤
 
 ---
+
+## 🧬 **Level 8: Add Auth**
+
+🧩 _Goal:_ Create authentication logic.
+
+- [ ] Create authentication logic to prevent bot spamming
+
+✅ **Reward:** No bot spamming 😤
 
 ## 🏆 Progress Tracker
 

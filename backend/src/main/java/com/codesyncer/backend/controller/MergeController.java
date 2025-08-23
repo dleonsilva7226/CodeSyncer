@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.*;
 
-@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/merge")
+@CrossOrigin(origins = "http://localhost:3000")
 public class MergeController {
 
     private MergeService mergeService;
@@ -51,10 +51,7 @@ public class MergeController {
 
     }
 
-    @PostMapping(
-        value = "/accept/{mergeID}",
-        consumes = MediaType.APPLICATION_JSON_VALUE
-    )
+    @PostMapping("/accept/{mergeID}")
     public ResponseEntity<?> acceptMergeSuggestion (@PathVariable Long mergeID) {
         Optional<Merge> acceptedMerge = this.mergeService.saveMergeSuggestion(mergeID);
         if (acceptedMerge.isPresent()) {
@@ -64,10 +61,7 @@ public class MergeController {
         return new ResponseEntity<>(notFoundResponse, HttpStatus.NOT_FOUND);
     }
 
-    @DeleteMapping(
-        value = "/reject/{mergeID}",
-        consumes = MediaType.APPLICATION_JSON_VALUE
-    )
+    @DeleteMapping("/reject/{mergeID}")
     public ResponseEntity<?> rejectMergeSuggestion (@PathVariable Long mergeID) {
         Map<String, String> deletionResponse = this.mergeService.rejectMergeSuggestion(mergeID);
         return new ResponseEntity<>(deletionResponse, HttpStatus.OK);
