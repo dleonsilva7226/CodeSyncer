@@ -66,7 +66,7 @@ Welcome to **CodeSyncer**, an AI-enhanced full-stack synchronization and collabo
 
 🧩 _Goal:_ Enable real-time team collaboration.
 
-- [ ] Add WebSocket support to Spring Boot (WebFlux)
+- [X] Add WebSocket support to Spring Boot (WebFlux)
 - [ ] Broadcast sync/merge events to connected clients
 - [ ] Show active user cursors or edits in real-time
 - [ ] Implement basic conflict warning when edits overlap
