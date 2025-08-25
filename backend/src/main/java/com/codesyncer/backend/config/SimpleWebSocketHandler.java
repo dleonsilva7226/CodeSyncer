@@ -1,49 +1,56 @@
 package com.codesyncer.backend.config;
 
-
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.reactive.config.EnableWebFlux;
-import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping;
-import org.springframework.web.reactive.socket.WebSocketHandler;
-import org.springframework.web.reactive.socket.WebSocketMessage;
-import org.springframework.web.reactive.socket.WebSocketSession;
+import org.springframework.stereotype.Component;
+import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.WebSocketMessage;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
 import org.springframework.web.util.UriComponentsBuilder;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-@Configuration
-@EnableWebFlux
+@Component
 @Slf4j
-public class SimpleWebSocketHandler implements WebSocketHandler {
+public class SimpleWebSocketHandler extends TextWebSocketHandler {
 
-    @Bean
-    public SimpleUrlHandlerMapping simpleUrlHandlerMapping() {
-        Map<String, WebSocketHandler> urlMap = new HashMap<>();
-        // this here is connecting the /ws endpoint to the handle method (kind of like a controller -> service logic)
-        urlMap.put("/ws", this::handle);
+    private final ConcurrentHashMap<String, WebSocketSession> sessionMap = new ConcurrentHashMap<>();;
 
-        SimpleUrlHandlerMapping handlerMapping = new SimpleUrlHandlerMapping();
-        handlerMapping.setUrlMap(urlMap);
-        handlerMapping.setOrder(1);
-
-        return handlerMapping;
+    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        String email = getEmailFromSession(session);
+        if (email != null) {
+            sessionMap.put(email, session);
+            log.info("Websocket connected for id: " + email);
+        }
     }
 
-    @Override
-    public Mono<Void> handle(WebSocketSession session) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromUri(session.getHandshakeInfo().getUri());
-        Map<String,String> queryParams = builder.build().getQueryParams().toSingleValueMap();
-        String uniqueId = queryParams.get("email");
-        log.info("Websocket connected for id "+uniqueId);
-        Flux<WebSocketMessage> messageFlux = session.receive()
-                .map(msg -> "Server received: " + msg.getPayloadAsText())
-                .map(session::textMessage);
+    public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
+        String email = getEmailFromSession(session);
+        String receivedMessage = (String) message.getPayload();
+        if (email != null) {
+            log.info("Received message from " + email + ": " + receivedMessage);
+            // Echo the message back to the client
+            session.send(new TextMessage("Echo: " + receivedMessage));
+        }
+    }
 
-        return session.send(messageFlux);
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+        String email = getEmailFromSession(session);
+        if (email != null) {
+            sessionMap.remove(email);
+            log.info("Websocket disconnected for id: " + email);
+        }
+    }
+
+    private String getEmailFromSession(WebSocketSession session) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUri(session.getUri());
+        Map<String,String> queryParams = builder.build().getQueryParams().toSingleValueMap();
+        return queryParams.get("email");
     }
 }
+
