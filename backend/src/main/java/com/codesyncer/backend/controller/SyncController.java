@@ -17,7 +17,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import java.util.*;
 
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/sync")
 public class SyncController {

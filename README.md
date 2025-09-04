@@ -11,10 +11,10 @@ Welcome to **CodeSyncer**, an AI-enhanced full-stack synchronization and collabo
 | 1     | 🌱 The Sync Begins      | Core backend, frontend, and DB setup      | **Aug 4, 2025**  | [X]    |
 | 2     | ⚡ Dependency Decoder   | Integrate AI suggestions MVP              | **Aug 9, 2025**  | [X]    |
 | 3     | 🧠 Merge Master         | AI-powered diff & merge resolution        | **Aug 18, 2025** | [X]    |
-| 4     | 📡 Real-Time Ranger     | Add live collaboration via WebSockets     | **Sep 1, 2025** | [~]    |
-| 5     | 🏗️ Architect Mode        | Build advanced UI + dependency tools      | **Sep 6, 2025**  | [ ]    |
-| 6     | 🧪 The Tester           | Add tests + analytics for optimization    | **Sep 13, 2025** | [ ]    |
-| 7     | 🧬 AI Apprentice (Bonus)| Train your own AI model for suggestions   | **Sep 22, 2025** | [ ]    |
+| 4     | 📡 Real-Time Ranger     | Add live collaboration via WebSockets     | **Sep 28, 2025** | [~]    |
+| 5     | 🏗️ Architect Mode        | Build advanced UI + dependency tools      | **Nov 12, 2025**  | [ ]    |
+| 6     | 🧪 The Tester           | Add tests + analytics for optimization    | **Jan 12, 2026** | [ ]    |
+| 7     | 🧬 AI Apprentice (Bonus)| Train your own AI model for suggestions   | **Mar 22, 2026** | [ ]    |
 
 
 ---
@@ -66,10 +66,10 @@ Welcome to **CodeSyncer**, an AI-enhanced full-stack synchronization and collabo
 
 🧩 _Goal:_ Enable real-time team collaboration.
 
-- [X] Add WebSocket support to Spring Boot (Spring Web Socket - Not WebFlux)
-- [~] Broadcast sync/merge events to connected clients
-- [ ] Show active user cursors or edits in real-time
-- [ ] Implement basic conflict warning when edits overlap
+- [X] Add WebSocket support to Spring Boot (Spring Web Socket)
+- [X] Broadcast sync/merge events to connected clients
+- [ ] Show active user cursors or edits in real-time [Do this after ]
+- [ ] Implement basic conflict warning when edits overlap [Do this First]
 
 ✅ **Reward:** Real-time dev collab unlocked!
 

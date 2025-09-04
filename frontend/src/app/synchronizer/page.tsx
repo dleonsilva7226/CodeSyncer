@@ -6,7 +6,6 @@ import { FileUploadCard } from '../components/FileUploadCard';
 import { TabsComponent } from '../components/Tabs';
 import { RefactorCodeForm } from '../components/RefactorCodeForm';
 import { MergeCodeForm } from '../components/MergeCodeForm';
-import { DiffView } from '../components/DiffView';
 
 const diffText = `
 diff --git a/HelloWorld.java b/HelloWorld.java

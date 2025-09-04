@@ -25,3 +25,15 @@ export interface MergeData {
   isAccepted: boolean;
   diff: DiffEntry[];
 }
+
+
+// collaboration.ts
+
+export type WsMessage =
+  | { type: "join"; id: string }
+  | { type: "quit"; id: string }
+  | { type: "move"; id: string; x: number; y: number }
+  | { type: "get-cursors" }
+  | { type: "get-cursors-response"; sessions: Session[] };
+
+export type Session = { id: string; x: number; y: number };

@@ -1,4 +1,5 @@
 package com.codesyncer.backend.controller;
+import com.codesyncer.backend.model.CodeSyncerEvent;
 import com.codesyncer.backend.model.Merge;
 import com.codesyncer.backend.service.AiService;
 import com.codesyncer.backend.service.DiffService;
@@ -12,16 +13,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
 @RequestMapping("/merge")
-@CrossOrigin(origins = "http://localhost:3000")
 public class MergeController {
 
     private MergeService mergeService;
     private AiService aiService;
 
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
+    @Autowired
     public MergeController(MergeService mergeService, AiService aiService) {
         this.mergeService = mergeService;
         this.aiService = aiService;
@@ -47,6 +53,19 @@ public class MergeController {
         }
 
         Merge mergeSuggestion = this.mergeService.createMerge(oldFile, newFile, author, true);
+
+        CodeSyncerEvent event = new CodeSyncerEvent(
+                "MERGE_SUGGEST",
+                author,
+                "Refactoring Suggestions Provided",
+                LocalDateTime.now(),
+                new HashMap<String, Object>()
+        );
+
+
+        System.out.println("Broadcasting sync completion for user: " + author);
+        messagingTemplate.convertAndSend("/topic/merge-events",
+                "User " + author + " completed sync suggestions");
         return new ResponseEntity<Merge>(mergeSuggestion, HttpStatus.OK);
 
     }
