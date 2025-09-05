@@ -5,6 +5,7 @@ import { LoadingPage } from '../components/LoadingPage';
 import { FileUploadCard } from '../components/FileUploadCard';
 import { MergeData } from '../api';
 import { MergeView } from './MergeCodeCard';
+import { EnhancedMergeView } from './EnhancedMergeCodeCard';
 
 export const MergeCodeForm = () => {
   const {fetchMergeApi, acceptMergeApi, rejectMergeApi} = mergeApi(); 
@@ -72,7 +73,7 @@ export const MergeCodeForm = () => {
     </div>
     <div className="w-full h-full flex justify-center">
       {response !== undefined ? (
-          <MergeView data={response} />
+          <EnhancedMergeView data={response}/>
         ) : (
           <LoadingPage isLoading={isLoading}/>
         )}
